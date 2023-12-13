@@ -6,10 +6,15 @@ public class QuickSortLomuto {
     }
 
     private static <T extends Comparable<T>> void quickSort(T[] arr, int low, int high) {
-        if (low < high) {
+        while (low < high) {
             int pivotIndex = lomutoPartition(arr, low, high);
-            quickSort(arr, low, pivotIndex - 1);
-            quickSort(arr, pivotIndex + 1, high);
+            if (pivotIndex - low < high - pivotIndex) {
+                quickSort(arr, low, pivotIndex - 1);
+                low = pivotIndex + 1;
+            } else {
+                quickSort(arr, pivotIndex + 1, high);
+                high = pivotIndex - 1;
+            }
         }
     }
 
