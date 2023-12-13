@@ -1,0 +1,197 @@
+Procedure InsertionSort(A: array of items)
+    For i from 1 to length(A) - 1
+        current = A[i]
+        j = i - 1
+        While j >= 0 and A[j] > current
+            A[j + 1] = A[j]
+            j = j - 1
+        End While
+        A[j + 1] = current
+    End For
+End Procedure
+
+Procedure SelectionSort(A: array of items)
+    For i from 0 to length(A) - 1
+        minIndex = i
+        For j from i + 1 to length(A) - 1
+            If A[j] < A[minIndex]
+                minIndex = j
+            End If
+        End For
+        If minIndex != i
+            Swap A[i] and A[minIndex]
+        End If
+    End For
+End Procedure
+
+Procedure ShellSort(A: array of items)
+    n = length(A)
+    For gap = n / 2 down to 1
+        For i from gap to n - 1
+            temp = A[i]
+            j = i
+            While j >= gap and A[j - gap] > temp
+                A[j] = A[j - gap]
+                j = j - gap
+            End While
+            A[j] = temp
+        End For
+    End For
+End Procedure
+
+
+# HeapSort
+
+Procedure HeapSort(A: array of items)
+    BuildMaxHeap(A)
+    n = length(A) - 1
+    For i from n down to 1
+        Swap A[0] and A[i]
+        n = n - 1
+        MaxHeapify(A, 0, n)
+    End For
+End Procedure
+
+Procedure BuildMaxHeap(A: array of items)
+    For i from (length(A) / 2) - 1 down to 0
+        MaxHeapify(A, i, length(A) - 1)
+    End For
+End Procedure
+
+Procedure MaxHeapify(A: array of items, index: integer, n: integer)
+    If index is a leaf node in the heap of size n
+        Return
+    End If
+    left = 2 * index + 1
+    right = 2 * index + 2
+    largest = index
+    If left <= n and A[left] > A[largest]
+        largest = left
+    End If
+    If right <= n and A[right] > A[largest]
+        largest = right
+    End If
+    If largest != index
+        Swap A[index] and A[largest]
+        MaxHeapify(A, largest, n)
+    End If
+End Procedure
+
+# MergeSort
+
+Procedure MergeSort(A: array of items)
+    length = length(A)
+    If length < 2
+        Return
+    End If
+    mid = length / 2
+    leftArray = copy of A[0..mid-1]
+    rightArray = copy of A[mid..length-1]
+    MergeSort(leftArray)
+    MergeSort(rightArray)
+    Merge(A, leftArray, rightArray)
+End Procedure
+
+Procedure Merge(A: array of items, leftArray: array of items, rightArray: array of items)
+    i = 0, j = 0, k = 0
+    While i < length(leftArray) and j < length(rightArray)
+        If leftArray[i] < rightArray[j]
+            A[k] = leftArray[i]
+            i = i + 1
+        Else
+            A[k] = rightArray[j]
+            j = j + 1
+        End If
+        k = k + 1
+    End While
+    While i < length(leftArray)
+        A[k] = leftArray[i]
+        i = i + 1
+        k = k + 1
+    End While
+    While j < length(rightArray)
+        A[k] = rightArray[j]
+        j = j + 1
+        k = k + 1
+    End While
+End Procedure
+
+# QuickSortHoare
+
+Procedure QuickSort(A: array of items, lowIndex: integer, highIndex: integer)
+    If lowIndex >= highIndex
+        Return
+    End If
+    pivotIndex = random integer between lowIndex and highIndex
+    pivot = A[pivotIndex]
+    Swap A[pivotIndex] and A[highIndex]
+    leftPointer = HoarePartition(A, lowIndex, highIndex, pivot)
+    QuickSort(A, lowIndex, leftPointer - 1)
+    QuickSort(A, leftPointer + 1, highIndex)
+End Procedure
+
+Procedure HoarePartition(A: array of items, lowIndex: integer, highIndex: integer, pivot: item)
+    leftPointer = lowIndex
+    rightPointer = highIndex
+    While leftPointer < rightPointer
+        While A[leftPointer] <= pivot and leftPointer < rightPointer
+            leftPointer = leftPointer + 1
+        End While
+        While A[rightPointer] >= pivot and leftPointer < rightPointer
+            rightPointer = rightPointer - 1
+        End While
+        Swap A[leftPointer] and A[rightPointer]
+    End While
+    Swap A[leftPointer] and A[highIndex]
+    Return leftPointer
+End Procedure
+
+Procedure Swap(A: array of items, index1: integer, index2: integer)
+    temp = A[index1]
+    A[index1] = A[index2]
+    A[index2] = temp
+End Procedure
+
+# QuickSortLomuto
+
+Procedure QuickSort(A: array of items, low: integer, high: integer)
+    If low < high
+        pivotIndex = LomutoPartition(A, low, high)
+        QuickSort(A, low, pivotIndex - 1)
+        QuickSort(A, pivotIndex + 1, high)
+    End If
+End Procedure
+
+Procedure LomutoPartition(A: array of items, low: integer, high: integer)
+    pivot = A[high]
+    i = low - 1
+    For j = low to high - 1
+        If A[j] <= pivot
+            i = i + 1
+            Swap A[i] with A[j]
+        End If
+    End For
+    Swap A[i + 1] with A[high]
+    Return i + 1
+End Procedure
+
+# 3-WayMergeSort
+
+Procedure 3-Way-Merge-Sort(Array A)
+    if size of A is less than 2
+        return A
+    else
+        Divide A into three equal parts: A1, A2, A3
+        A1 = 3-Way-Merge-Sort(A1)
+        A2 = 3-Way-Merge-Sort(A2)
+        A3 = 3-Way-Merge-Sort(A3)
+        return Merge(A1, A2, A3)
+
+Procedure Merge(A1, A2, A3)
+    Initialize empty array A
+    while A1, A2, A3 are not empty
+        find the smallest element among the first elements of A1, A2, A3
+        move the smallest element to A
+    end while
+    move the remaining elements of A1, A2, A3 (if any) to A
+    return A
