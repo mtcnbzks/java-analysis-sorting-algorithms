@@ -9,7 +9,7 @@ import org.openjdk.jmh.runner.options.VerboseMode;
 
 import java.util.concurrent.TimeUnit;
 
-public class TestAllInOne {
+public class Main {
     @State(Scope.Benchmark)
     public static class BenchmarkState {
         Character[] arr;
@@ -71,7 +71,7 @@ public class TestAllInOne {
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(TestAllInOne.class.getSimpleName())
+                .include(Main.class.getSimpleName())
                 .mode(Mode.AverageTime)
                 .timeUnit(TimeUnit.MILLISECONDS)
                 .warmupIterations(2)
