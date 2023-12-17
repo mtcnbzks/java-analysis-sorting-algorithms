@@ -5,19 +5,26 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.VerboseMode;
 
 import java.util.concurrent.TimeUnit;
 
-public class Main {
+public class TestAllInOne {
     @State(Scope.Benchmark)
     public static class BenchmarkState {
-        Integer[] arr;
+        Character[] arr;
+
+        @Param({
+                "32K_string_1",
+                "64K_string_1",
+                "128K_string_1",
+                "256K_string_1"
+        })
+        public String inputFile;
 
         @Setup(Level.Trial)
-        public void setup() {
-            arr = Utils.generateRandomIntegerArray(10000); // 10K
-            // arr = Utils.generateSortedIntegerArray(10000); // 10K
-            // arr = Utils.generateReverseSortedIntegerArray(10000); // 10K
+        public void setupTrial() {
+            arr = Utils.fileToCharacterArray(inputFile);
         }
     }
 
@@ -64,13 +71,15 @@ public class Main {
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(Main.class.getSimpleName())
-                .shouldDoGC(true)
+                .include(TestAllInOne.class.getSimpleName())
                 .mode(Mode.AverageTime)
                 .timeUnit(TimeUnit.MILLISECONDS)
                 .warmupIterations(2)
                 .measurementIterations(5)
-                .forks(1)
+                // .forks(1)
+                .shouldDoGC(true)
+                .verbosity(VerboseMode.EXTRA)
+                .result("benchmark_results.txt")
                 .build();
         new Runner(opt).run();
     }
